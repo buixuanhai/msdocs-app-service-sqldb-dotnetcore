@@ -24,8 +24,11 @@ jobs:
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Install dotnet-ef tool, add to PATH, publish, and create migrations bundle
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+          dotnet ef migrations bundle -o ${{env.DOTNET_ROOT}}/myapp/migrations
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
